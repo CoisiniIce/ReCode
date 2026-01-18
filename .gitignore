@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -10,19 +8,25 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
 # next.js
 /.next/
 /out/
 
 # production
 /build
+/dist
 
-# misc
-.DS_Store
-*.pem
+# Prisma & SQLite
+/prisma/dev.db
+/prisma/dev.db-journal
+/prisma/migrations/
+*.db
+*.db-journal
+
+# env files
+.env
+.env*
+!.env.example
 
 # debug
 npm-debug.log*
@@ -30,14 +34,14 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
+# misc
+.DS_Store
+*.pem
+/src/generated/prisma
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-/src/generated/prisma
+# vercel
+.vercel
