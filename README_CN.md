@@ -37,7 +37,21 @@ ReCode 是一个专为追求学习效率的开发者设计的算法练习管理�
 2. `Git`
    - Download: [Git Official Website](https://git-scm.com/)
 
-### 安装与运行
+### 安装与运行 - 自动
+
+- Windows: 直接双击根目录下的 `start.bat` 即可自动完成安装与启动。
+
+---
+
+- Mac / Linux: 在终端执行:
+
+```bash
+chmod +x start.sh && ./start.sh
+```
+
+接着双击 `start_mac.sh` 运行即可。
+
+### 安装与运行 - 手动
 
 #### 1. 克隆仓库（或者你可以直接下载压缩包）
 

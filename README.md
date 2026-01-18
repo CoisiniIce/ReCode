@@ -37,7 +37,21 @@ ReCode is a coding practice management tool designed for developers who pursue l
 2. `Git`
    - Download: [Git Official Website](https://git-scm.com/)
 
-### Installation & Execution
+### Installation & Execution - Quick Start
+
+- Windows: Simply double-click the `start_windows.bat` file located in the root directory and the installation and startup process will be completed automatically.
+
+---
+
+- Mac / Linux: Execute in the terminal:
+
+```bash
+chmod +x start.sh && ./start.sh
+```
+
+Then double-click the `start_mac.sh` to execute. 
+
+### Installation & Execution - Manual
 
 #### 1. Clone the Repository (or download the ZIP directly)
 
