@@ -1,0 +1,138 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// -----------------------------------------------------------------------------
+// User: Stores user identity, preferences, and global settings
+// -----------------------------------------------------------------------------
+model User {
+  id            String     @id @default(cuid())
+  // Username used for login and display
+  username      String     @unique
+  // Avatar URL, supports external links or local paths
+  avatar        String?
+  
+  // Preference settings: affects frontend rendering
+  // Default programming language opened in the editor
+  preferredLang String     @default("typescript")
+  // UI language, currently supports English and Chinese
+  uiLanguage    String     @default("en")
+  // Global theme color, reserved for future use
+  themeColor    String     @default("emerald")    
+  
+  // Relations
+  // All problem progress associated with the user
+  progress      Progress[]
+  // Account creation timestamp
+  createdAt     DateTime   @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// Problem: Stores problem metadata (static info across all platforms)
+// -----------------------------------------------------------------------------
+model Problem {
+  id              String   @id @default(cuid())
+  
+  // The platform the problem belongs to (LEETCODE, CODEFORCES, LINTCODE, etc.)
+  platform        String   @default("LEETCODE")
+  // Platform-specific ID (e.g., "1" for LeetCode, "158A" for Codeforces)
+  pid             String
+  // Name of the problem
+  title           String
+  // Used for generating URL paths (e.g., "two-sum")
+  slug            String?
+  // Problem link, alternative to slug as slug generation might be inaccurate
+  url             String?
+  
+  // Problem difficulty (e.g., "Hard", "1800", "Hard")
+  difficulty      String
+  // 5 (Perfect): Very proficient, like muscle memory.
+  // 4 (Correct): Correct answer, but with some hesitation during implementation.
+  // 3 (Correct): Correct answer, but required significant effort.
+  // 2 (Incorrect): Wrong answer, but recalled after seeing the solution.
+  // 1 (Incorrect): Wrong answer, but could understand the solution.
+  // 0 (Total Failure): No clue at all, solution feels completely new.
+  difficultyLevel Int      @default(1)
+  // Problem category tags, stored as a comma-separated string (e.g., "DP,Stack,Array")
+  tags            String
+  
+  // Relations
+  // Linked to review progress of different users
+  progress        Progress[]
+
+  // Constraint to ensure the same platform ID is not entered twice
+  @@unique([platform, pid])
+}
+
+// -----------------------------------------------------------------------------
+// Progress: Stores learning and algorithm state between "User and Problem"
+// -----------------------------------------------------------------------------
+model Progress {
+  id           String   @id @default(cuid())
+  
+  // Foreign Key Relations
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  problemId    String
+  problem      Problem  @relation(fields: [problemId], references: [id])
+
+  // Learning State
+  // Current status: Todo, Solved, Reviewing (could be used for graduation mechanism)
+  status       String   @default("Todo")
+  // Notes specifically for this problem
+  notes        String?
+
+  // SRS Algorithm part, drives the "Today's Tasks" on the Dashboard
+  // The most recent self-assessed mastery score (0-5)
+  masteryLevel Int      @default(0)
+  // The next review interval in days calculated by the algorithm
+  interval     Int      @default(0)
+  // Easiness factor (E-Factor), dynamically adjusted based on ratings
+  easiness     Float    @default(2.5)
+  // Total number of times this problem has been reviewed
+  reviewCount  Int      @default(0)
+  // The timestamp of the last actual review/rating
+  lastReview   DateTime?
+  // The next scheduled review time calculated by the algorithm
+  nextReview   DateTime @default(now())
+
+  // Relations
+  // Implementation code for this problem in different languages
+  submissions  Submission[]
+
+  // Creation timestamp
+  createdAt    DateTime @default(now())
+  // Automatically refreshed every time the progress (e.g., rating) is updated
+  updatedAt    DateTime @updatedAt
+  
+  // Constraint ensuring a user has only one progress record per problem
+  @@unique([userId, problemId])
+}
+
+// -----------------------------------------------------------------------------
+// Submission: Stores specific solution code (supports multi-solution/multi-lang)
+// -----------------------------------------------------------------------------
+model Submission {
+  id         String   @id @default(cuid())
+  
+  // Foreign Key Relation
+  progressId String
+  progress   Progress @relation(fields: [progressId], references: [id])
+  
+  // Code Content
+  // Programming language identifier (e.g., "typescript", "python", "cpp")
+  language   String
+  // The actual source code text
+  code       String
+  // Whether this is used as the default display version for the problem
+  isMain     Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
