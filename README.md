@@ -15,6 +15,12 @@ ReCode is a coding practice management tool designed for developers who pursue l
 - 🔢 **LaTeX Support**: Supports mathematical formula rendering, making it easy to document complex algorithm complexity analysis, mathematical derivations, or geometric proofs.
 - 📊 **Visualized Insights**: Intuitive mastery distribution charts, daily task focus, and learning progress tracking.
 
+---
+
+![Home](./public/images/home.png)
+![Questions](./public/images/questions.png)
+![Review](./public/images/review.png)
+
 ## Tech Stack
 
 - **Framework**: `Next.js 16`

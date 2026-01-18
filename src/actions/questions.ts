@@ -154,9 +154,6 @@ export async function deleteQuestionAction(progressId: string) {
         await tx.problem.delete({
           where: { id: progress.problemId },
         });
-        console.log(
-          `Problem ${progress.problemId} deleted as it became an orphan.`
-        );
       }
     });
 

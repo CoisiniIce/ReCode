@@ -15,6 +15,12 @@ ReCode 是一个专为追求学习效率的开发者设计的算法练习管理�
 - 🔢 支持 `LaTeX` 数学公式渲染，支持记录复杂的算法复杂度分析、数学推导或几何证明。
 - 📊 直观的掌握度分布图表、今日任务聚焦点及学习进度追踪。
 
+---
+
+![Home](./public/images/home.png)
+![Questions](./public/images/questions.png)
+![Review](./public/images/review.png)
+
 ## 技术架构
 
 - 框架: `Next.js 16`

@@ -131,7 +131,7 @@ export default function OnboardingPage() {
                 <SelectValue placeholder="Select Language" />
               </SelectTrigger>
               <SelectContent className="rounded-2xl border-white/40 bg-white/90 backdrop-blur-xl shadow-2xl">
-                {["typescript", "javascript", "python", "cpp", "java"].map(
+                {["typescript", "javascript", "python", "cpp", "java","go"].map(
                   (lang) => (
                     <SelectItem
                       key={lang}
