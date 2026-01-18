@@ -24,9 +24,9 @@
 *.db-journal
 
 # env files
-.env
-.env*
-!.env.example
+# .env
+# .env*
+# !.env.example
 
 # debug
 npm-debug.log*
