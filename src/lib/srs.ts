@@ -1,26 +1,45 @@
+/**
+ * Configuration constants for the Spaced Repetition System (SRS)
+ */
 export const SRS_CONFIG = {
-  GRADUATION_INTERVAL: 365, // 超过 365 天不再复习，视为"毕业"
-  MIN_EASINESS: 1.3, // 最小易读度（防止题目变得太难导致死循环）
-  BONUS_EASINESS_HARD: -0.2, // Hard 题目的初始惩罚
-  BONUS_EASINESS_EASY: 0.2, // Easy 题目的初始奖励
+  /** The interval threshold in days to mark a task as fully mastered */
+  GRADUATION_INTERVAL: 365,
+  /** The floor value for the E-Factor to prevent the repetition spiral */
+  MIN_EASINESS: 1.3,
+  /** Initial E-Factor decrement for items categorized as high difficulty */
+  BONUS_EASINESS_HARD: -0.2,
+  /** Initial E-Factor increment for items categorized as low difficulty */
+  BONUS_EASINESS_EASY: 0.2,
 };
 
 interface SrsInput {
-  currentInterval: number; // 当前间隔 (天)
-  currentEasiness: number; // 当前易读度 (E-Factor)
-  grade: number; // 用户评分 (0-5)
-  difficulty: string; // 题目原始难度 (Easy/Medium/Hard)
-  reviewCount: number; // 已复习次数
+  /** Current review interval measured in days */
+  currentInterval: number;
+  /** Current Easiness Factor (E-Factor) determining the growth rate of intervals */
+  currentEasiness: number;
+  /** User performance rating typically ranging from 0 to 5 */
+  grade: number;
+  /** The intrinsic difficulty level of the material */
+  difficulty: string;
+  /** Total number of successful review sessions completed */
+  reviewCount: number;
 }
 
 interface SrsOutput {
+  /** Calculated interval for the next review session */
   nextInterval: number;
+  /** Updated Easiness Factor based on the latest performance */
   nextEasiness: number;
-  status: "Reviewing" | "Mastered" | "Solved"; // Solved 是为了保持类型兼容，实际逻辑中可作为过渡
+  /** The lifecycle status of the item within the SRS pipeline */
+  status: "Reviewing" | "Mastered" | "Solved";
 }
 
 /**
- * 核心 SRS 迭代计算函数
+ * Calculates the next review parameters using an optimized SM-2 algorithmic approach.
+ * * The algorithm applies a deterministic step-sequence for early-stage reviews and 
+ * transitions to an E-Factor multiplication model for mature items. It incorporates 
+ * a fuzzing mechanism for long-term intervals to prevent review load spikes and 
+ * enforces boundary constraints to ensure scheduled sustainability.
  */
 export function calculateNextReview({
   currentInterval,
@@ -32,54 +51,72 @@ export function calculateNextReview({
   let nextInterval: number;
   let nextEasiness: number = currentEasiness;
 
-  // 1. 处理评分逻辑
+  /**
+   * Logical branch for successful recall (Positive feedback)
+   */
   if (grade >= 3) {
-    // === 成功回忆 ===
-
-    // A. 第一次复习 (或 ReviewCount=0)
+    /**
+     * Initial learning phase or first-time interaction
+     */
     if (reviewCount === 0 || currentInterval === 0) {
       nextInterval = 1;
 
-      // 根据题目原始难度调整初始 E-Factor
+      /**
+       * Adjust initial E-Factor based on the intrinsic difficulty of the task
+       */
       if (difficulty === "Hard") nextEasiness -= 0.2;
       if (difficulty === "Easy") nextEasiness += 0.2;
     }
-    // B. 第二次复习
+    /**
+     * Second stage of the learning ramp
+     */
     else if (reviewCount === 1) {
       nextInterval = 6;
     }
-    // C. 后续复习 (核心公式)
+    /**
+     * Mature review phase utilizing the core SM-2 interval expansion formula
+     */
     else {
-      // 标准 SM-2 E-Factor 更新公式
-      // EF' = EF + (0.1 - (5-q) * (0.08 + (5-q) * 0.02))
+      /**
+       * Update the E-Factor based on the user's performance grade
+       * Formula: EF' = EF + (0.1 - (5-q) * (0.08 + (5-q) * 0.02))
+       */
       const change = 0.1 - (5 - grade) * (0.08 + (5 - grade) * 0.02);
       nextEasiness = currentEasiness + change;
 
-      // 间隔计算：I(n) = I(n-1) * EF
+      /**
+       * Interval calculation: I(n) = I(n-1) * EF
+       */
       nextInterval = Math.ceil(currentInterval * nextEasiness);
 
-      // 模糊因子 (Fuzzing)：加入 -5% 到 +5% 的随机波动，防止堆积
-      // 只有间隔大于 10 天才应用，避免短期复习乱序
+      /**
+       * Apply a random jitter (Fuzzing) between -5% and +5% to intervals exceeding 10 days
+       * to distribute the review load across the calendar.
+       */
       if (nextInterval > 10) {
-        const fuzz = 0.95 + Math.random() * 0.1; // 0.95 ~ 1.05
+        const fuzz = 0.95 + Math.random() * 0.1;
         nextInterval = Math.ceil(nextInterval * fuzz);
       }
     }
   } else {
-    // === 忘记了 (Grade 0-2) ===
-
-    // 现实机制：不直接重置为 0，而是保留一定比例 (比如 20%)，避免挫败感太强
-    // 或者按照经典 Anki 逻辑：重置为 1，但保留 E-Factor 稍微降低
+    /**
+     * Logical branch for recall failure (Negative feedback)
+     * Resets the interval while applying a penalty to the Easiness Factor.
+     */
     nextInterval = 1;
     nextEasiness = Math.max(SRS_CONFIG.MIN_EASINESS, currentEasiness - 0.2);
   }
 
-  // 2. 边界值保护
+  /**
+   * Enforce the minimum E-Factor boundary constraint
+   */
   if (nextEasiness < SRS_CONFIG.MIN_EASINESS) {
     nextEasiness = SRS_CONFIG.MIN_EASINESS;
   }
 
-  // 3. 毕业机制检查
+  /**
+   * Evaluate the graduation criteria to determine if the item is mastered
+   */
   let status: SrsOutput["status"] = "Reviewing";
 
   if (nextInterval >= SRS_CONFIG.GRADUATION_INTERVAL) {
