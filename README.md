@@ -1,46 +1,54 @@
-# ReCode - Your Professional Coding Practice Notebook
+# ReCode - Your Professional Coding Practice Companion
 
 [中文版](./README_CN.md)
 
-## Introduction
+---
 
-ReCode is a local-first coding practice management tool built with Next.js 16. It supports Markdown notes, code syntax highlighting, LaTeX math formula rendering, and mastery level management. Most importantly, it tracks your solved problems and intelligently schedules daily reviews based on the Spaced Repetition System (SRS).
+ReCode is a coding practice management tool designed for developers who pursue learning efficiency. It is not just a note-taking application, but a tool that integrates a high-quality editing experience with a scientific Spaced Repetition System (SRS).
 
 💡 Note: This project currently runs in source code mode. To use it, follow the simple local deployment steps below.
 
----
+## Features
 
-## Prerequisites
+- 🧠 **Improved SRS Algorithm**: Based on the classic Spaced Repetition System. The system dynamically calculates the best timing for your next review based on your self-assessed mastery (Level 0-5) and problem difficulty.
+- 📝 **Built-in Monaco Editor**: Supports syntax highlighting for all major programming languages. It also features a dual-pane Markdown note system with real-time preview.
+- 🔢 **LaTeX Support**: Supports mathematical formula rendering, making it easy to document complex algorithm complexity analysis, mathematical derivations, or geometric proofs.
+- 📊 **Visualized Insights**: Intuitive mastery distribution charts, daily task focus, and learning progress tracking.
 
-Before you begin, ensure you have the following installed on your machine:
+## Tech Stack
 
-1. Node.js (Recommended version 20.x or higher, I use v24.12.0)
-   - Download: [Node.js Official Website](https://nodejs.org/) - LTS Version
-2. Git
-   - Download: [Git Official Website](https://git-scm.com/)
-
----
+- **Framework**: `Next.js 16`
+- **UI**: `Tailwind CSS 4`, `Framer Motion`
+- **Database**: `SQLite` + `Prisma`
+- **Core Components**: `Monaco Editor`, `React Markdown`, `KaTeX`, etc.
 
 ## Getting Started
 
-### 1. Clone the Repository
+### Prerequisites
+
+1. `Node.js` (Recommended version 20.x or higher, I am using v24.12.0)
+   - Download: [Node.js Official Website](https://nodejs.org/) - LTS Version
+2. `Git`
+   - Download: [Git Official Website](https://git-scm.com/)
+
+### Installation & Execution
+
+#### 1. Clone the Repository (or download the ZIP directly)
 
 ```bash
-git clone https://github.com/CoisiniIce/ReCode.git
-cd recode
+git clone https://github.com/CoisiniIce/ReCode
+cd ReCode
 ```
 
-### 2. Install Dependencies
-
-Open your terminal (Cmd / PowerShell / Git) in the project root and run:
+#### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-Note: This may take some time. If the installation fails due to network issues, consider using a proxy or a mirror registry.
+Note: This may take some time. If the installation fails due to network issues, please consider using a mirror registry.
 
-### 3. Initialize the Database
+#### 3. Sync Database: Initialize Local `SQLite` and Generate Prisma Client
 
 This project uses a local `SQLite` database. Run the following commands to generate the database files:
 
@@ -49,25 +57,29 @@ npx prisma generate
 npx prisma db push
 ```
 
-### 4. Launch the Application
+#### 4. Launch the Application
 
 ```bash
 npm run dev
 ```
 
-Once successfully started, open your browser and visit `http://localhost:3000` to start your journey!
+Once the above steps are successful, open your browser and visit `http://localhost:3000` to start your algorithm journey!
 
 ## FAQ
 
 ### Q1: Where is my data stored?
-- All notes and problem data are stored in the `prisma/dev.db` file at the project root.
 
-- Backup: Periodically copy this file to another location to complete a manual backup.
+All your notes, code, and review progress are stored in the `prisma/dev.db` file at the project root.
 
-- Migration: When switching computers, just move the `dev.db` file and run `npm install` in the new environment.
+- Backup: Simply copy the `dev.db` file to a safe location periodically.
 
-### Q2: How can I view the database content directly?
-If you want to visualize and manage your data tables, run:
+- Migration: When switching computers, just copy the file to the `prisma/` directory in your new environment.
+
+### Q2: Can I view the database content directly?
+
+If you want to view the database schema, visit `prisma/schema.prisma`.
+
+If you want to directly view or modify the underlying data, you can use the following command:
 
 ```bash
 npx prisma studio
@@ -75,10 +87,10 @@ npx prisma studio
 
 This will open a database manager in your browser. You can interact with the data directly (though manual editing is not recommended).
 
-### Q3: What should I do if I get a "Module not found" error?
+### Q3: What should I do if I encounter a `Module not found` error?
 
 This is usually caused by an incomplete installation due to network issues. Try deleting the `node_modules` folder and running `npm install` again.
 
 ---
 
-This project is a personal development effort, so bugs or oversights may occur. If you encounter any issues, feel free to open an Issue on GitHub!
+This project is personally developed, so errors or oversights may occur. If you encounter any issues, please feel free to let me know on GitHub.
