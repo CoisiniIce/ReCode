@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db";
 import { calculateNextReview } from "@/lib/srs";
 import { revalidatePath } from "next/cache";
+import { getNextReviewDate } from "@/lib/utils";
 
 export async function submitReviewAction(progressId: string, rating: number) {
   try {
@@ -27,10 +28,8 @@ export async function submitReviewAction(progressId: string, rating: number) {
       reviewCount: progress.reviewCount,
     });
 
-    // next review date
+    const nextReviewDate = getNextReviewDate(nextInterval);
     const now = new Date();
-    const nextReviewDate = new Date();
-    nextReviewDate.setDate(now.getDate() + nextInterval);
 
     await prisma.progress.update({
       where: { id: progressId },

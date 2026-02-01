@@ -66,6 +66,9 @@ export const TRANSLATIONS = {
       diffEasy: "简单",
       diffMedium: "中等",
       diffHard: "困难",
+      jumpBtn: "跳转",
+      prevBtn: "上一页",
+      nextBtn: "下一页",
     },
     previewSheet: {
       editBtn: "编辑",
@@ -237,6 +240,9 @@ export const TRANSLATIONS = {
       diffEasy: "Easy",
       diffMedium: "Medium",
       diffHard: "Hard",
+      jumpBtn: "Jump",
+      prevBtn: "Prev",
+      nextBtn: "Next",
     },
     previewSheet: {
       editBtn: "Edit",
@@ -414,6 +420,9 @@ export type TranslationKeys =
   | "questionsTable.diffEasy"
   | "questionsTable.diffMedium"
   | "questionsTable.diffHard"
+  | "questionsTable.jumpBtn"
+  | "questionsTable.prevBtn"
+  | "questionsTable.nextBtn"
   | "previewSheet.editBtn"
   | "previewSheet.masteryLevel"
   | "previewSheet.updatedAt"

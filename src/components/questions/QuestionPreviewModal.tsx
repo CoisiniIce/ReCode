@@ -44,7 +44,7 @@ export const QuestionPreviewModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-5xl w-[95vw] h-[90vh] p-0 flex flex-col bg-white/95 backdrop-blur-2xl rounded-[2.5rem] border border-white/40 shadow-2xl overflow-hidden gap-0 ring-1 ring-black/5">
+      <DialogContent className="sm:max-w-5xl w-[95vw] h-[90vh] p-0 flex flex-col bg-white/95 backdrop-blur-2xl rounded-[1rem] border border-white/40 shadow-2xl overflow-hidden gap-0 ring-1 ring-black/5">
         {/* Header */}
         <DialogHeader className="p-8 border-b border-gray-100/50 bg-white/50 shrink-0 space-y-4">
           <div className="flex items-start justify-between gap-6">
@@ -87,7 +87,7 @@ export const QuestionPreviewModal = ({
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="h-11 w-11 rounded-full p-0 text-gray-400 hover:text-gray-900 hover:bg-gray-100 transition-all"
+                    className="h-11 w-11 rounded-full p-0 text-gray-400 hover:text-gray-900 hover:bg-gray-100 transition-all cursor-pointer"
                     title="Open Link"
                   >
                     <ExternalLink size={22} />
@@ -97,7 +97,7 @@ export const QuestionPreviewModal = ({
               <Link href={`/questions/${data.id}`}>
                 <Button
                   size="sm"
-                  className="gap-2 h-11 px-6 rounded-2xl bg-gray-900 hover:bg-black text-white shadow-md shadow-gray-200 hover:shadow-gray-400 transition-all active:scale-95"
+                  className="gap-2 h-11 px-6 rounded-2xl bg-gray-900 hover:bg-black text-white shadow-md shadow-gray-200 hover:shadow-gray-400 transition-all active:scale-95 cursor-pointer"
                 >
                   <Edit3 size={16} />{" "}
                   <span className="font-semibold">

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { MASTERY_COLORS_1 } from "@/constants";
 import { QuestionRowData } from "@/types";
 import { SortConfig } from "./QuestionsPageClient";
+
 
 interface QuestionsTableProps {
   data: QuestionRowData[];
@@ -49,6 +51,16 @@ export const QuestionsTable = ({
   onPageChange,
 }: QuestionsTableProps) => {
   const { t } = useTranslation();
+
+  const [jumpPage, setJumpPage] = useState("");
+
+  const handleJump = () => {
+    const pageNum = parseInt(jumpPage);
+    if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPages) {
+      onPageChange(pageNum);
+      setJumpPage("");
+    }
+  };
 
   const renderSortIcon = (columnKey: SortConfig["key"]) => {
     if (sortConfig.key !== columnKey) {
@@ -229,29 +241,53 @@ export const QuestionsTable = ({
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between px-2">
-          <div className="text-sm text-gray-500 font-medium pl-2">
-            Page {currentPage} of {totalPages}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2 py-2">
+          {/* Page number statistics */}
+          <div className="text-sm text-gray-400 font-medium pl-2">
+            <span className="text-gray-600">Page {currentPage}</span> of {totalPages}
           </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onPageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="rounded-xl border-gray-200 hover:bg-gray-100 shadow-sm disabled:opacity-50 cursor-pointer"
-            >
-              <ChevronLeft size={16} className="mr-1" /> Prev
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onPageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="rounded-xl border-gray-200 hover:bg-gray-100 shadow-sm disabled:opacity-50 cursor-pointer"
-            >
-              Next <ChevronRight size={16} className="ml-1" />
-            </Button>
+
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Jump to page */}
+            <div className="flex items-center gap-2 bg-gray-100/50 p-1 rounded-xl border border-gray-100">
+              <input
+                type="text"
+                value={jumpPage}
+                onChange={(e) => setJumpPage(e.target.value.replace(/\D/g, ""))}
+                onKeyDown={(e) => e.key === "Enter" && handleJump()}
+                placeholder="Page"
+                className="w-12 bg-transparent border-none text-center text-sm focus:ring-0 placeholder:text-gray-400 text-gray-600"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleJump}
+                className="h-7 px-2 rounded-lg text-xs hover:bg-white hover:text-[#ffa116] transition-all text-gray-500 font-bold cursor-pointer"
+              >
+                {t("questionsTable.jumpBtn")}
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="rounded-xl border-gray-200 hover:bg-white hover:text-[#ffa116] hover:border-[#ffa116]/30 shadow-sm disabled:opacity-30 cursor-pointer transition-all"
+              >
+                <ChevronLeft size={16} className="mr-1" /> {t("questionsTable.prevBtn")}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="rounded-xl border-gray-200 hover:bg-white hover:text-[#ffa116] hover:border-[#ffa116]/30 shadow-sm disabled:opacity-30 cursor-pointer transition-all"
+              >
+                {t("questionsTable.nextBtn")} <ChevronRight size={16} className="ml-1" />
+              </Button>
+            </div>
           </div>
         </div>
       )}

@@ -324,7 +324,7 @@ export default function QuestionsPageClient({
                   )}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px] rounded-[2rem] border-white/40 bg-white/90 backdrop-blur-2xl shadow-2xl p-8">
+              <DialogContent className="sm:max-w-[500px] rounded-[1rem] border-white/40 bg-white/90 backdrop-blur-2xl shadow-2xl p-8">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-bold text-gray-900">
                     {t("questionPage.filterModalTitle")}

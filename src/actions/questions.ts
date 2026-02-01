@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db";
 import { EditorFormData } from "@/types/editor";
 import { revalidatePath } from "next/cache";
+import { getNextReviewDate } from "@/lib/utils";
 
 function mapDifficultyToLevel(diff: string): number {
   switch (diff) {
@@ -31,8 +32,7 @@ export async function saveQuestionAction(formData: EditorFormData) {
     }
 
     const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const nextReviewDate = getNextReviewDate(1);
 
     await prisma.$transaction(async (tx) => {
       // process Problem
@@ -90,7 +90,7 @@ export async function saveQuestionAction(formData: EditorFormData) {
           easiness: getInitialEasiness(formData.difficulty),
 
           lastReview: now,
-          nextReview: tomorrow,
+          nextReview: nextReviewDate,
         },
       });
 
