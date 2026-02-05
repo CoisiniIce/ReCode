@@ -2,21 +2,16 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { submitReviewAction } from "@/actions/review";
 
 import { toast } from "sonner";
 
 import { ReviewTask, ReviewClientProps } from "@/types/review";
-import { submitReviewAction } from "@/actions/review";
+import { containerVariants } from "@/animations/reviewAnimations";
 
 import { ReviewHeader } from "./ReviewHeader";
 import { ReviewEmptyState } from "./ReviewEmptyState";
 import { ReviewCard } from "./ReviewCard";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } },
-  exit: { opacity: 0 },
-};
 
 export default function ReviewPageClient({
   initialReviews,

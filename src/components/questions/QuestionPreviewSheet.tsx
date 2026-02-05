@@ -22,7 +22,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Code, FileText, Calendar, Edit3 } from "lucide-react";
 
-import { MASTERY_COLORS_1 } from "@/constants";
+import { MASTERY_COLORS } from "@/constants";
 import { QuestionRowData } from "@/types";
 
 interface QuestionPreviewSheetProps {
@@ -80,7 +80,7 @@ export const QuestionPreviewSheet = ({
                     className="w-2 h-2 rounded-full"
                     style={{
                       backgroundColor:
-                        MASTERY_COLORS_1[data.masteryLevel] || "#ccc",
+                        MASTERY_COLORS[data.masteryLevel] || "#ccc",
                     }}
                   ></span>
                   {t("previewSheet.masteryLevel")} {data.masteryLevel}

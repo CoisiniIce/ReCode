@@ -22,7 +22,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Code, FileText, Calendar, Edit3, ExternalLink, X } from "lucide-react";
 
-import { MASTERY_COLORS_1 } from "@/constants";
+import { MASTERY_COLORS } from "@/constants";
 import { QuestionRowData } from "@/types";
 
 interface QuestionPreviewModalProps {
@@ -65,7 +65,7 @@ export const QuestionPreviewModal = ({
                     className="w-2.5 h-2.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.1)]"
                     style={{
                       backgroundColor:
-                        MASTERY_COLORS_1[data.masteryLevel] || "#ccc",
+                        MASTERY_COLORS[data.masteryLevel] || "#ccc",
                     }}
                   />
                   Lv.{data.masteryLevel}

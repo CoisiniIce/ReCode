@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import HomePageClient from "@/components/home/HomePageClient";
 
 import type { FocusTaskItem, MasteryDistributionItem } from "@/types";
-import { MASTERY_COLORS_1 } from "@/constants";
+import { MASTERY_COLORS } from "@/constants";
 
 const getHomePageData = async (userId: string) => {
   const now = new Date();
@@ -98,7 +98,7 @@ const getHomePageData = async (userId: string) => {
       level: level,
       count: found ? found._count._all : 0,
       label: `L${level}`,
-      color: MASTERY_COLORS_1[level] || "#cbd5e1",
+      color: MASTERY_COLORS[level] || "#cbd5e1",
     };
   });
 

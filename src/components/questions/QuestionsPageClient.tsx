@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { deleteQuestionAction } from "@/actions/questions";
-import { useTranslation } from "@/hooks/useTranslation";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { deleteQuestionAction } from '@/actions/questions';
+import { useTranslation } from '@/hooks/useTranslation';
 
-import { useState, useMemo, useEffect } from "react";
-import { Search, Filter, Save, Check } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useState, useMemo, useEffect } from 'react';
+import { Search, Filter, Save, Check } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,8 +19,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -29,17 +29,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-import { QuestionsTable } from "./QuestionsTable";
+import { QuestionsTable } from './QuestionsTable';
 // import { QuestionPreviewSheet } from "./QuestionPreviewSheet";
-import { QuestionPreviewModal } from "./QuestionPreviewModal";
+import { QuestionPreviewModal } from './QuestionPreviewModal';
 
-import type { QuestionRowData, QuestionsPageClientProps } from "@/types";
+import type { QuestionRowData, QuestionsPageClientProps } from '@/types';
 
-import { DIFFICULTIES, STATUS_OPTIONS, MASTERY_COLORS_1 } from "@/constants";
+import { DIFFICULTIES, STATUS_OPTIONS, MASTERY_COLORS } from '@/constants';
 
 const MASTERY_OPTIONS = [0, 1, 2, 3, 4, 5];
 // pagination
@@ -47,8 +47,8 @@ const ITEMS_PER_PAGE = 10;
 
 export type SortConfig = {
   // updatedAt is default
-  key: "pid" | "masteryLevel" | "difficulty" | "updatedAt";
-  direction: "asc" | "desc";
+  key: 'pid' | 'masteryLevel' | 'difficulty' | 'updatedAt';
+  direction: 'asc' | 'desc';
 };
 
 export default function QuestionsPageClient({
@@ -59,7 +59,7 @@ export default function QuestionsPageClient({
   const { t } = useTranslation();
 
   // base
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [previewData, setPreviewData] = useState<QuestionRowData | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -74,8 +74,8 @@ export default function QuestionsPageClient({
 
   // Sorting & Pagination
   const [sortConfig, setSortConfig] = useState<SortConfig>({
-    key: "updatedAt",
-    direction: "desc",
+    key: 'updatedAt',
+    direction: 'desc',
   });
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -85,7 +85,7 @@ export default function QuestionsPageClient({
     const tags = new Set<string>();
     initialQuestions.forEach((q) => {
       if (q.problem.tags) {
-        q.problem.tags.split(",").forEach((tag) => tags.add(tag.trim()));
+        q.problem.tags.split(',').forEach((tag) => tags.add(tag.trim()));
       }
     });
     return Array.from(tags).sort();
@@ -95,16 +95,16 @@ export default function QuestionsPageClient({
     setCurrentPage(1);
   }, [searchQuery, filterDifficulty, filterStatus, filterMastery, filterTags]);
 
-  const handleSort = (key: SortConfig["key"]) => {
+  const handleSort = (key: SortConfig['key']) => {
     setSortConfig((current) => {
       if (current.key === key) {
-        if (current.direction === "asc") {
-          return { key, direction: "desc" };
+        if (current.direction === 'asc') {
+          return { key, direction: 'desc' };
         } else {
-          return { key: "updatedAt", direction: "desc" };
+          return { key: 'updatedAt', direction: 'desc' };
         }
       }
-      return { key, direction: "asc" };
+      return { key, direction: 'asc' };
     });
   };
 
@@ -132,7 +132,7 @@ export default function QuestionsPageClient({
         filterMastery.length === 0 || filterMastery.includes(item.masteryLevel);
 
       // tags filter
-      const itemTags = item.problem.tags ? item.problem.tags.split(",") : [];
+      const itemTags = item.problem.tags ? item.problem.tags.split(',') : [];
       const matchesTags =
         filterTags.length === 0 ||
         filterTags.some((tag) => itemTags.includes(tag));
@@ -149,20 +149,20 @@ export default function QuestionsPageClient({
     // 2. Sorting
     data.sort((a, b) => {
       const { key, direction } = sortConfig;
-      const modifier = direction === "asc" ? 1 : -1;
+      const modifier = direction === 'asc' ? 1 : -1;
 
       switch (key) {
-        case "pid":
+        case 'pid':
           // 尝试转换为数字比较，处理 "1", "2", "10" 这种排序
           const pidA = parseInt(a.problem.pid) || 0;
           const pidB = parseInt(b.problem.pid) || 0;
           if (pidA !== pidB) return (pidA - pidB) * modifier;
           return a.problem.pid.localeCompare(b.problem.pid) * modifier;
 
-        case "masteryLevel":
+        case 'masteryLevel':
           return (a.masteryLevel - b.masteryLevel) * modifier;
 
-        case "difficulty":
+        case 'difficulty':
           // 自定义难度权重
           const difficultyRank: Record<string, number> = {
             Easy: 1,
@@ -173,7 +173,7 @@ export default function QuestionsPageClient({
           const rankB = difficultyRank[b.problem.difficulty] || 99;
           return (rankA - rankB) * modifier;
 
-        case "updatedAt":
+        case 'updatedAt':
         default:
           return (
             (new Date(a.updatedAt).getTime() -
@@ -197,7 +197,7 @@ export default function QuestionsPageClient({
   const totalPages = Math.ceil(processedData.length / ITEMS_PER_PAGE);
   const paginatedData = processedData.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    currentPage * ITEMS_PER_PAGE,
   );
 
   // interaction function
@@ -218,14 +218,14 @@ export default function QuestionsPageClient({
       const result = await deleteQuestionAction(deleteId);
 
       if (result.success) {
-        toast.success("Question deleted successfully");
+        toast.success('Question deleted successfully');
         setDeleteId(null);
         router.refresh();
       } else {
-        toast.error(result.error || "Failed to delete");
+        toast.error(result.error || 'Failed to delete');
       }
     } catch (error) {
-      toast.error("Network error occurred");
+      toast.error('Network error occurred');
     } finally {
       setIsDeleting(false);
     }
@@ -235,7 +235,7 @@ export default function QuestionsPageClient({
   const toggleSelection = (
     currentList: string[],
     setList: (val: string[]) => void,
-    item: string
+    item: string,
   ) => {
     if (currentList.includes(item)) {
       setList(currentList.filter((i) => i !== item));
@@ -274,7 +274,7 @@ export default function QuestionsPageClient({
         className="absolute inset-0 pointer-events-none opacity-[0.7]"
         style={{
           backgroundImage: `radial-gradient(#cbd5e1 1px, transparent 1px)`,
-          backgroundSize: "24px 24px",
+          backgroundSize: '24px 24px',
         }}
       />
 
@@ -283,10 +283,10 @@ export default function QuestionsPageClient({
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
           <div>
             <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
-              {t("questionPage.title")}
+              {t('questionPage.title')}
             </h1>
             <p className="text-gray-500 mt-2 text-lg font-medium">
-              {t("questionPage.description")}
+              {t('questionPage.description')}
             </p>
           </div>
 
@@ -295,7 +295,7 @@ export default function QuestionsPageClient({
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 group-focus-within:text-[#ffa116] transition-colors" />
               <Input
                 type="text"
-                placeholder={t("questionPage.searchPlaceholder")}
+                placeholder={t('questionPage.searchPlaceholder')}
                 className="pl-10 h-12 bg-white/80 backdrop-blur-md border-gray-200/60 shadow-sm rounded-2xl focus:ring-2 focus:ring-[#ffa116]/20 focus:border-[#ffa116]/50 transition-all text-base"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -308,14 +308,14 @@ export default function QuestionsPageClient({
                 <Button
                   variant="outline"
                   className={cn(
-                    "h-12 px-5 gap-2 bg-white/80 backdrop-blur-md border-gray-200/60 shadow-sm rounded-2xl cursor-pointer hover:bg-white hover:shadow-md transition-all relative",
+                    'h-12 px-5 gap-2 bg-white/80 backdrop-blur-md border-gray-200/60 shadow-sm rounded-2xl cursor-pointer hover:bg-white hover:shadow-md transition-all relative',
                     activeFilterCount > 0 &&
-                    "border-[#ffa116]/30 text-[#ffa116] bg-orange-50/50"
+                      'border-[#ffa116]/30 text-[#ffa116] bg-orange-50/50',
                   )}
                 >
                   <Filter size={18} />
                   <span className="font-medium">
-                    {t("questionPage.filterBtn")}
+                    {t('questionPage.filterBtn')}
                   </span>
                   {activeFilterCount > 0 && (
                     <span className="absolute -top-2 -right-2 w-5 h-5 bg-[#ffa116] text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm ring-2 ring-white">
@@ -327,10 +327,10 @@ export default function QuestionsPageClient({
               <DialogContent className="sm:max-w-[500px] rounded-[1rem] border-white/40 bg-white/90 backdrop-blur-2xl shadow-2xl p-8">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-bold text-gray-900">
-                    {t("questionPage.filterModalTitle")}
+                    {t('questionPage.filterModalTitle')}
                   </DialogTitle>
                   <DialogDescription>
-                    {t("questionPage.filterModalDes")}
+                    {t('questionPage.filterModalDes')}
                   </DialogDescription>
                 </DialogHeader>
 
@@ -338,7 +338,7 @@ export default function QuestionsPageClient({
                   {/* Difficulty Filter */}
                   <div className="space-y-4">
                     <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
-                      {t("questionPage.filterLabelDiff")}
+                      {t('questionPage.filterLabelDiff')}
                     </h4>
                     <div className="flex flex-wrap gap-2.5">
                       {DIFFICULTIES.map((diff) => {
@@ -346,22 +346,22 @@ export default function QuestionsPageClient({
                         return (
                           <Badge
                             key={diff}
-                            variant={isSelected ? "default" : "outline"}
+                            variant={isSelected ? 'default' : 'outline'}
                             className={cn(
-                              "cursor-pointer px-4 py-2 text-sm rounded-xl transition-all select-none border",
+                              'cursor-pointer px-4 py-2 text-sm rounded-xl transition-all select-none border',
                               isSelected
-                                ? diff === "Easy"
-                                  ? "bg-emerald-500 hover:bg-emerald-600 border-emerald-500 shadow-emerald-200 shadow-md text-white"
-                                  : diff === "Medium"
-                                    ? "bg-amber-500 hover:bg-amber-600 border-amber-500 shadow-amber-200 shadow-md text-white"
-                                    : "bg-rose-500 hover:bg-rose-600 border-rose-500 shadow-rose-200 shadow-md text-white"
-                                : "bg-white hover:bg-gray-50 text-gray-600 border-gray-200"
+                                ? diff === 'Easy'
+                                  ? 'bg-emerald-500 hover:bg-emerald-600 border-emerald-500 shadow-emerald-200 shadow-md text-white'
+                                  : diff === 'Medium'
+                                    ? 'bg-amber-500 hover:bg-amber-600 border-amber-500 shadow-amber-200 shadow-md text-white'
+                                    : 'bg-rose-500 hover:bg-rose-600 border-rose-500 shadow-rose-200 shadow-md text-white'
+                                : 'bg-white hover:bg-gray-50 text-gray-600 border-gray-200',
                             )}
                             onClick={() =>
                               toggleSelection(
                                 filterDifficulty,
                                 setFilterDifficulty,
-                                diff
+                                diff,
                               )
                             }
                           >
@@ -376,9 +376,9 @@ export default function QuestionsPageClient({
                   </div>
 
                   {/* Status Filter */}
-                  <div className="space-y-4">
+                  {/* <div className="space-y-4">
                     <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
-                      {t("questionPage.filterLabelStatus")}
+                      {t('questionPage.filterLabelStatus')}
                     </h4>
                     <div className="flex flex-wrap gap-2.5">
                       {STATUS_OPTIONS.map((status) => {
@@ -386,18 +386,18 @@ export default function QuestionsPageClient({
                         return (
                           <Badge
                             key={status}
-                            variant={isSelected ? "secondary" : "outline"}
+                            variant={isSelected ? 'secondary' : 'outline'}
                             className={cn(
-                              "cursor-pointer px-4 py-2 text-sm rounded-xl transition-all select-none border",
+                              'cursor-pointer px-4 py-2 text-sm rounded-xl transition-all select-none border',
                               isSelected
-                                ? "bg-gray-900 text-white hover:bg-gray-800 shadow-lg shadow-gray-200 border-transparent"
-                                : "bg-white hover:bg-gray-50 text-gray-600 border-gray-200"
+                                ? 'bg-gray-900 text-white hover:bg-gray-800 shadow-lg shadow-gray-200 border-transparent'
+                                : 'bg-white hover:bg-gray-50 text-gray-600 border-gray-200',
                             )}
                             onClick={() =>
                               toggleSelection(
                                 filterStatus,
                                 setFilterStatus,
-                                status
+                                status,
                               )
                             }
                           >
@@ -409,27 +409,27 @@ export default function QuestionsPageClient({
                         );
                       })}
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Mastery Filter */}
                   <div className="space-y-4">
                     <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
-                      {t("questionPage.filterLabelMastery")}
+                      {t('questionPage.filterLabelMastery')}
                     </h4>
                     <div className="flex flex-wrap gap-2.5">
                       {MASTERY_OPTIONS.map((level) => {
                         const isSelected = filterMastery.includes(level);
-                        const color = MASTERY_COLORS_1[level] || "#ccc";
+                        const color = MASTERY_COLORS[level] || '#ccc';
 
                         return (
                           <Badge
                             key={level}
                             variant="outline"
                             className={cn(
-                              "cursor-pointer px-3 py-1.5 rounded-lg transition-all select-none border font-mono",
+                              'cursor-pointer px-3 py-1.5 rounded-lg transition-all select-none border font-mono',
                               isSelected
-                                ? "text-white border-transparent shadow-md"
-                                : "bg-white hover:bg-gray-50 text-gray-600 border-gray-200"
+                                ? 'text-white border-transparent shadow-md'
+                                : 'bg-white hover:bg-gray-50 text-gray-600 border-gray-200',
                             )}
                             style={{
                               backgroundColor: isSelected ? color : undefined,
@@ -451,7 +451,7 @@ export default function QuestionsPageClient({
                   {/* Tags Filter */}
                   <div className="space-y-4">
                     <h4 className="text-sm font-bold text-gray-500 uppercase tracking-wider ml-1">
-                      {t("questionPage.filterLabelTag")} ({availableTags.length}
+                      {t('questionPage.filterLabelTag')} ({availableTags.length}
                       )
                     </h4>
                     {availableTags.length > 0 ? (
@@ -463,10 +463,10 @@ export default function QuestionsPageClient({
                               key={tag}
                               variant="outline"
                               className={cn(
-                                "cursor-pointer transition-all select-none rounded-md px-2 py-1",
+                                'cursor-pointer transition-all select-none rounded-md px-2 py-1',
                                 isSelected
-                                  ? "bg-blue-100/50 text-blue-700 border-blue-200"
-                                  : "bg-white text-gray-500 hover:bg-gray-100 border-gray-200"
+                                  ? 'bg-blue-100/50 text-blue-700 border-blue-200'
+                                  : 'bg-white text-gray-500 hover:bg-gray-100 border-gray-200',
                               )}
                               onClick={() =>
                                 toggleSelection(filterTags, setFilterTags, tag)
@@ -479,7 +479,7 @@ export default function QuestionsPageClient({
                       </div>
                     ) : (
                       <p className="text-sm text-gray-400 italic px-2">
-                        {t("questionPage.filterLabelTagDes")}
+                        {t('questionPage.filterLabelTagDes')}
                       </p>
                     )}
                   </div>
@@ -490,26 +490,26 @@ export default function QuestionsPageClient({
                     variant="ghost"
                     onClick={clearFilters}
                     disabled={activeFilterCount === 0}
-                    className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl"
+                    className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-xl cursor-pointer"
                   >
-                    {t("questionPage.filterReset")}
+                    {t('questionPage.filterReset')}
                   </Button>
                   <Button
                     onClick={() => setIsFilterOpen(false)}
-                    className="bg-gray-900 text-white hover:bg-gray-800 rounded-xl px-6 shadow-lg shadow-gray-200"
+                    className="bg-gray-900 text-white hover:bg-gray-800 rounded-xl px-6 shadow-lg shadow-gray-200 cursor-pointer"
                   >
-                    {t("questionPage.filterShow")} {processedData.length}{" "}
-                    {t("questionPage.filterResults")}
+                    {t('questionPage.filterShow')} {processedData.length}{' '}
+                    {t('questionPage.filterResults')}
                   </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
 
-            <Link href={"/questions/add"}>
-              <Button className="h-12 px-6 bg-[#ffa116] hover:bg-[#e69318] text-white flex-1 md:flex-none cursor-pointer rounded-2xl shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:-translate-y-0.5 transition-all">
+            <Link href={'/questions/add'}>
+              <Button className="h-12 px-6 bg-[#ffa116] hover:bg-[#e69318] text-white flex-1 md:flex-none cursor-pointer rounded-2xl transition-all">
                 <Save className="w-5 h-5 mr-2" />
                 <span className="font-semibold text-base">
-                  {t("questionPage.createBtn")}
+                  {t('questionPage.createBtn')}
                 </span>
               </Button>
             </Link>
@@ -545,10 +545,10 @@ export default function QuestionsPageClient({
           <AlertDialogContent className="rounded-[2rem] bg-white/90 backdrop-blur-xl border-white/40 shadow-2xl p-8">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-2xl font-bold text-gray-900">
-                {t("questionPage.deleteModalTitle")}
+                {t('questionPage.deleteModalTitle')}
               </AlertDialogTitle>
               <AlertDialogDescription className="text-base text-gray-500 mt-2">
-                {t("questionPage.deleteModalDes")}
+                {t('questionPage.deleteModalDes')}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="mt-6 gap-3">
@@ -556,7 +556,7 @@ export default function QuestionsPageClient({
                 disabled={isDeleting}
                 className="rounded-xl border-gray-200 bg-white hover:bg-gray-50 h-11"
               >
-                {t("questionPage.cancelBtn")}
+                {t('questionPage.cancelBtn')}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={(e) => {
@@ -567,8 +567,8 @@ export default function QuestionsPageClient({
                 disabled={isDeleting}
               >
                 {isDeleting
-                  ? t("questionPage.deletingBtn")
-                  : t("questionPage.deleteBtn")}
+                  ? t('questionPage.deletingBtn')
+                  : t('questionPage.deleteBtn')}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

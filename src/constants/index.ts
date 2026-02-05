@@ -24,29 +24,20 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
 ];
 
-export const STATCARD_COLOR_VARIANTS: Record<CardVariant, string> = {
-  orange: "from-[#ffb545] to-[#df8c11] shadow-orange-900/20",
-  green: "from-[#52B788] to-[#2D6A4F] shadow-emerald-900/20",
-  blue: "from-[#4facfe] to-[#00f2fe] shadow-blue-900/20",
-  purple: "from-[#a18cd1] to-[#fbc2eb] shadow-purple-900/20",
+export const STATCARD_COLOR_VARIANTS: Record<string, string> = {
+  orange: "from-orange-400 to-orange-600 shadow-orange-500/30",
+  blue: "from-blue-500 to-indigo-600 shadow-blue-500/30",
+  purple: "from-purple-500 to-fuchsia-600 shadow-purple-500/30",
+  green: "from-emerald-400 to-teal-600 shadow-emerald-500/30",
 };
 
-export const MASTERY_COLORS_1: Record<number, string> = {
+export const MASTERY_COLORS: Record<number, string> = {
   0: "#ef4444",
   1: "#f97316",
   2: "#facc15",
   3: "#a3e635",
   4: "#22c55e",
   5: "#15803d",
-};
-
-export const MASTERY_COLORS_2: Record<number, string> = {
-  0: "#FDA4AF",
-  1: "#FED7AA",
-  2: "#FEF08A",
-  3: "#D9F99D",
-  4: "#86EFAC",
-  5: "#4ADE80",
 };
 
 // Programming languages ​​supported in edit notes
@@ -56,7 +47,6 @@ export const LANGUAGES = [
   { value: "python", label: "Python" },
   { value: "java", label: "Java" },
   { value: "cpp", label: "C++" },
-  { value: "go", label: "Go" },
 ];
 
 export const DIFFICULTIES = ["Easy", "Medium", "Hard"];

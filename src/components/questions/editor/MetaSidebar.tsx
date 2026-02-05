@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-import { MASTERY_COLORS_1, DIFFICULTIES } from "@/constants";
+import { MASTERY_COLORS, DIFFICULTIES } from "@/constants";
 
 import { Link as LinkIcon } from "lucide-react";
 
@@ -164,7 +164,7 @@ export const MetaSidebar = ({
           <span
             className="text-xs font-bold px-3 py-1 rounded-full text-white shadow-sm"
             style={{
-              backgroundColor: MASTERY_COLORS_1[masteryLevel] || "#ccc",
+              backgroundColor: MASTERY_COLORS[masteryLevel] || "#ccc",
             }}
           >
             Lv. {masteryLevel}

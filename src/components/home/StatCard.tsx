@@ -1,18 +1,11 @@
-"use client";
+'use client';
 
-import { ArrowUpRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+import { ArrowUpRight, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
-import type { StatCardProps } from "@/types";
-// import {STATCARD_COLOR_VARIANTS} from "@/constants"
-
-const STATCARD_COLOR_VARIANTS: Record<string, string> = {
-  orange: "from-orange-400 to-orange-600 shadow-orange-500/30",
-  blue: "from-blue-500 to-indigo-600 shadow-blue-500/30",
-  purple: "from-purple-500 to-fuchsia-600 shadow-purple-500/30",
-  green: "from-emerald-400 to-teal-600 shadow-emerald-500/30",
-};
+import type { StatCardProps } from '@/types';
+import { STATCARD_COLOR_VARIANTS } from '@/constants';
 
 export function StatCard({
   title,
@@ -20,23 +13,23 @@ export function StatCard({
   icon,
   trend,
   footerText,
-  variant = "orange",
+  variant = 'orange',
   onClick,
   className,
 }: StatCardProps) {
   const showPercent =
-    title.toLowerCase().includes("rate") ||
-    (typeof value === "string" && value.includes("%"));
+    title.toLowerCase().includes('rate') ||
+    (typeof value === 'string' && value.includes('%'));
 
   return (
     <motion.div
       onClick={onClick}
       whileHover={{ scale: 1.02, y: -5 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       className={cn(
-        "relative p-7 rounded-[2rem] flex flex-col justify-between h-52 cursor-pointer text-white shadow-2xl bg-linear-to-br overflow-hidden group border border-white/10",
+        'relative p-7 rounded-[2rem] flex flex-col justify-between h-52 cursor-pointer text-white shadow-2xl bg-linear-to-br overflow-hidden group border border-white/10',
         STATCARD_COLOR_VARIANTS[variant],
-        className
+        className,
       )}
     >
       <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -81,8 +74,8 @@ export function StatCard({
             <div
               className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg font-bold border backdrop-blur-md shadow-sm ${
                 trend.value >= 0
-                  ? "bg-white/20 border-white/30 text-white"
-                  : "bg-red-500/20 border-red-500/30 text-red-50"
+                  ? 'bg-white/20 border-white/30 text-white'
+                  : 'bg-red-500/20 border-red-500/30 text-red-50'
               }`}
             >
               {trend.value > 0 ? (
@@ -93,9 +86,9 @@ export function StatCard({
                 <Minus size={14} />
               )}
               <span>
-                {trend.value > 0 ? "+" : ""}
+                {trend.value > 0 ? '+' : ''}
                 {trend.value}
-                {showPercent ? "%" : ""}
+                {showPercent ? '%' : ''}
               </span>
             </div>
             <span className="text-xs text-white/80 font-medium">

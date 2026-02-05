@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
+import { getDifficultyColor } from "@/hooks";
 
 import { ExternalLink, Calendar } from "lucide-react";
 
@@ -8,9 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 import { ReviewTask } from "@/types/review";
-import { MASTERY_COLORS_1 } from "@/constants";
-
-import { getDifficultyColor } from "@/hooks";
+import { MASTERY_COLORS } from "@/constants";
+import { itemVariants } from "@/animations/reviewAnimations";
 
 interface ReviewCardProps {
   task: ReviewTask;
@@ -20,12 +20,6 @@ interface ReviewCardProps {
   onCancel: () => void;
   onRate: (score: number) => void;
 }
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -20 },
-  show: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: 50, transition: { duration: 0.2 } },
-};
 
 const getLeetCodeUrl = (
   title: string,
@@ -123,7 +117,7 @@ export const ReviewCard = ({
                 style={{
                   width: `${(task.masteryLevel / 5) * 100}%`,
                   backgroundColor:
-                    MASTERY_COLORS_1[task.masteryLevel] || "#ccc",
+                    MASTERY_COLORS[task.masteryLevel] || "#ccc",
                 }}
               />
             </div>

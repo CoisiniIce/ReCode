@@ -11,7 +11,7 @@ import { Eye, Edit3, Trash2, ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, Chevr
 
 import { cn } from "@/lib/utils";
 
-import { MASTERY_COLORS_1 } from "@/constants";
+import { MASTERY_COLORS } from "@/constants";
 import { QuestionRowData } from "@/types";
 import { SortConfig } from "./QuestionsPageClient";
 
@@ -156,7 +156,7 @@ export const QuestionsTable = ({
                           className="h-full rounded-full transition-all duration-500"
                           style={{
                             width: `${(row.masteryLevel / 5) * 100}%`,
-                            backgroundColor: MASTERY_COLORS_1[row.masteryLevel],
+                            backgroundColor: MASTERY_COLORS[row.masteryLevel],
                           }}
                         />
                       </div>
