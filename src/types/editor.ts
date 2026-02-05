@@ -25,7 +25,8 @@ export interface MetaSidebarProps {
 
 export interface QuestionEditorProps {
   mode: "create" | "edit";
-  initialData?: EditorFormData; // clean data
+  // clean data
+  initialData?: Partial<EditorFormData>;
   preferredLang?: string;
 }
 

@@ -111,7 +111,7 @@ export default function QuestionsPageClient({
   const processedData = useMemo(() => {
     if (!initialQuestions) return [];
 
-    // 1. Filtering
+    // Filtering
     let data = initialQuestions.filter((item) => {
       // search filter
       const qTitle = item.problem.title.toLowerCase();
@@ -146,14 +146,13 @@ export default function QuestionsPageClient({
       );
     });
 
-    // 2. Sorting
+    // Sorting
     data.sort((a, b) => {
       const { key, direction } = sortConfig;
       const modifier = direction === 'asc' ? 1 : -1;
 
       switch (key) {
         case 'pid':
-          // 尝试转换为数字比较，处理 "1", "2", "10" 这种排序
           const pidA = parseInt(a.problem.pid) || 0;
           const pidB = parseInt(b.problem.pid) || 0;
           if (pidA !== pidB) return (pidA - pidB) * modifier;
@@ -163,7 +162,6 @@ export default function QuestionsPageClient({
           return (a.masteryLevel - b.masteryLevel) * modifier;
 
         case 'difficulty':
-          // 自定义难度权重
           const difficultyRank: Record<string, number> = {
             Easy: 1,
             Medium: 2,
