@@ -6,11 +6,13 @@ export const useUserStore = create<UserState>((set) => ({
   themeColor: "emerald",
   username: "No username",
   preferredLang: "typescript",
+  dailyReviewLimit: 50,
   isSettingModalOpen: false,
 
   setLanguage: (lang) => set({ uiLanguage: lang }),
   setTheme: (color) => set({ themeColor: color }),
   setUsername: (name) => set({ username: name }),
   setPreferredLang: (preLang) => set({ preferredLang: preLang }),
+  setDailyReviewLimit: (limit: number) => set({ dailyReviewLimit: limit }),
   setIsSettingModalOpen: (status: boolean) => set({ isSettingModalOpen: status }),
 }));

@@ -25,6 +25,9 @@ model User {
   uiLanguage    String     @default("en")
   // Global theme color, reserved for future use
   themeColor    String     @default("emerald")    
+
+  // Review limit
+  dailyReviewLimit Int   @default(50)
   
   // Relations
   // All problem progress associated with the user

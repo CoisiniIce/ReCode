@@ -11,6 +11,8 @@ export default async function ReviewPage() {
 
   const now = new Date();
 
+  const limit = user.dailyReviewLimit || 50;
+
   // Query pending review tasks
   // Condition: The status is not "Todo" and the next review time is less than or equal to the current time.
   const rawReviews = await prisma.progress.findMany({
@@ -26,7 +28,7 @@ export default async function ReviewPage() {
       nextReview: "asc",
     },
     // Limit the number of items loaded at one time
-    take: 50,
+    take: limit,
   });
 
   const reviews: ReviewTask[] = rawReviews.map((p) => ({

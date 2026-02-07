@@ -9,6 +9,7 @@ export const updateUserPreferences = async ({
   username,
   preferredLang,
   uiLanguage,
+  dailyReviewLimit,
 }: UpdateUserProps) => {
   try {
     await prisma.user.update({
@@ -16,6 +17,7 @@ export const updateUserPreferences = async ({
       data: {
         preferredLang,
         uiLanguage,
+        dailyReviewLimit,
       },
     });
 
