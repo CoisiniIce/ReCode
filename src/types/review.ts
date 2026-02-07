@@ -7,6 +7,12 @@ export interface ReviewTask {
   slug: string | null;
   masteryLevel: number;
   lastReviewDate: string | null;
+  notes?: string | null;
+  tags?: string;
+  submissions?: {
+    language: string;
+    code: string;
+  }[];
 }
 
 export interface ReviewClientProps {

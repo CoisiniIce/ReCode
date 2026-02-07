@@ -1,12 +1,12 @@
-import { prisma } from "@/lib/db";
-import { redirect } from "next/navigation";
-import ReviewPageClient from "@/components/review/ReviewPageClient";
-import { ReviewTask } from "@/types/review";
+import { prisma } from '@/lib/db';
+import { redirect } from 'next/navigation';
+import ReviewPageClient from '@/components/review/ReviewPageClient';
+import { ReviewTask } from '@/types/review';
 
 export default async function ReviewPage() {
   const user = await prisma.user.findFirst();
   if (!user) {
-    redirect("/onboarding");
+    redirect('/onboarding');
   }
 
   const now = new Date();
@@ -18,14 +18,24 @@ export default async function ReviewPage() {
   const rawReviews = await prisma.progress.findMany({
     where: {
       userId: user.id,
-      status: { not: "Todo" },
+      status: { not: 'Todo' },
       nextReview: { lte: now },
     },
     include: {
       problem: true,
+      submissions: {
+        orderBy: {
+          updatedAt: 'desc',
+        },
+        take: 1,
+        select: {
+          language: true,
+          code: true,
+        },
+      },
     },
     orderBy: {
-      nextReview: "asc",
+      nextReview: 'asc',
     },
     // Limit the number of items loaded at one time
     take: limit,
@@ -41,11 +51,14 @@ export default async function ReviewPage() {
     masteryLevel: p.masteryLevel,
     // Format the date to avoid serialization issues
     lastReviewDate: p.lastReview
-      ? p.lastReview.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
+      ? p.lastReview.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
         })
       : null,
+    notes: p.notes,
+    tags: p.problem.tags,
+    submissions: p.submissions,
   }));
 
   return <ReviewPageClient initialReviews={reviews} />;

@@ -1,16 +1,16 @@
-import { motion } from "framer-motion";
-import { useTranslation } from "@/hooks/useTranslation";
-import { getDifficultyColor } from "@/hooks";
+import { motion } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
+import { getDifficultyColor } from '@/hooks';
 
-import { ExternalLink, Calendar } from "lucide-react";
+import { ExternalLink, Calendar } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
-import { ReviewTask } from "@/types/review";
-import { MASTERY_COLORS } from "@/constants";
-import { itemVariants } from "@/animations/reviewAnimations";
+import { ReviewTask } from '@/types/review';
+import { MASTERY_COLORS } from '@/constants';
+import { itemVariants } from '@/animations/reviewAnimations';
 
 interface ReviewCardProps {
   task: ReviewTask;
@@ -19,15 +19,16 @@ interface ReviewCardProps {
   onActivate: () => void;
   onCancel: () => void;
   onRate: (score: number) => void;
+  onPreview: () => void;
 }
 
 const getLeetCodeUrl = (
   title: string,
   url: string | null,
-  slug: string | null
+  slug: string | null,
 ) => {
   if (url) return url;
-  const finalSlug = slug || title.toLowerCase().replace(/\s+/g, "-");
+  const finalSlug = slug || title.toLowerCase().replace(/\s+/g, '-');
   return `https://leetcode.com/problems/${finalSlug}/`;
 };
 
@@ -44,8 +45,8 @@ const RateButton = ({
     disabled={disabled}
     title={title}
     className={cn(
-      "flex flex-col items-center justify-center gap-1 h-20 rounded-2xl border transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group",
-      colorClass
+      'flex flex-col items-center justify-center gap-1 h-20 rounded-2xl border transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group',
+      colorClass,
     )}
   >
     <span className="text-xl font-black">{score}</span>
@@ -62,6 +63,7 @@ export const ReviewCard = ({
   onActivate,
   onCancel,
   onRate,
+  onPreview,
 }: ReviewCardProps) => {
   const { t } = useTranslation();
 
@@ -70,13 +72,13 @@ export const ReviewCard = ({
       layout
       variants={itemVariants}
       className={cn(
-        "group relative bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 transition-all duration-300 border",
+        'group relative bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 transition-all duration-300 border',
         isActive
-          ? "bg-white border-[#ffa116]/50 ring-4 ring-[#ffa116]/10 shadow-[0_20px_40px_-12px_rgba(255,161,22,0.2)] z-10 scale-[1.02]"
-          : "border-white/60 hover:border-[#ffa116]/30 hover:bg-white/80 hover:shadow-lg hover:shadow-gray-200/50"
+          ? 'bg-white border-[#ffa116]/50 ring-4 ring-[#ffa116]/10 shadow-[0_20px_40px_-12px_rgba(255,161,22,0.2)] z-10 scale-[1.02]'
+          : 'border-white/60 hover:border-[#ffa116]/30 hover:bg-white/80 hover:shadow-lg hover:shadow-gray-200/50',
       )}
     >
-      <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-12">
+      <div className="flex flex-col lg:flex-row justify-between gap-8 lg:gap-12">
         {/* Left Info Area */}
         <div className="flex-1 space-y-4">
           <div className="flex items-center gap-3">
@@ -86,8 +88,8 @@ export const ReviewCard = ({
             <Badge
               variant="outline"
               className={cn(
-                "font-bold border px-3 py-1 rounded-lg shadow-sm text-xs",
-                getDifficultyColor(task.difficulty)
+                'font-bold border px-3 py-1 rounded-lg shadow-sm text-xs',
+                getDifficultyColor(task.difficulty),
               )}
             >
               {t(`questionsTable.diff${task.difficulty}` as any)}
@@ -96,28 +98,30 @@ export const ReviewCard = ({
               <span className="text-xs font-medium text-gray-400 flex items-center gap-1.5 ml-auto md:ml-0 bg-white/50 px-2 py-1 rounded-md">
                 <Calendar size={12} />
                 <span className="hidden sm:inline">
-                  {t("reviewCard.lastReview")}:
+                  {t('reviewCard.lastReview')}:
                 </span>
                 {task.lastReviewDate}
               </span>
             )}
           </div>
 
-          <h3 className="text-2xl font-bold text-gray-900 leading-snug group-hover:text-[#ffa116] transition-colors duration-300">
+          <h3
+            onClick={onPreview}
+            className="text-2xl font-bold text-gray-900 leading-snug group-hover:text-[#ffa116] transition-colors duration-300 cursor-pointer"
+          >
             {task.title}
           </h3>
 
           <div className="flex items-center gap-3 pt-2">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-              {t("reviewCard.currentMastery")}
+              {t('reviewCard.currentMastery')}
             </span>
             <div className="h-2.5 flex-1 max-w-[120px] rounded-full bg-gray-100 overflow-hidden inner-shadow">
               <div
                 className="h-full rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(0,0,0,0.1)]"
                 style={{
                   width: `${(task.masteryLevel / 5) * 100}%`,
-                  backgroundColor:
-                    MASTERY_COLORS[task.masteryLevel] || "#ccc",
+                  backgroundColor: MASTERY_COLORS[task.masteryLevel] || '#ccc',
                 }}
               />
             </div>
@@ -139,7 +143,7 @@ export const ReviewCard = ({
                 onClick={onActivate}
               >
                 <Button className="w-full bg-gray-900 hover:bg-black gap-3 h-14 text-base font-bold rounded-2xl shadow-xl shadow-gray-200 hover:shadow-gray-300 hover:-translate-y-0.5 transition-all cursor-pointer">
-                  {t("reviewCard.solveBtn")} <ExternalLink size={18} />
+                  {t('reviewCard.solveBtn')} <ExternalLink size={18} />
                 </Button>
               </a>
               <Button
@@ -148,14 +152,14 @@ export const ReviewCard = ({
                 className="text-gray-400 hover:text-gray-900 font-medium hover:bg-gray-100/50 rounded-xl w-full h-10"
                 onClick={onActivate}
               >
-                {t("reviewCard.alreadySolved")}
+                {t('reviewCard.alreadySolved')}
               </Button>
             </>
           ) : (
             <div className="flex flex-col items-end gap-3 w-full animate-in fade-in slide-in-from-bottom-4 duration-300">
               <div className="flex items-center justify-between w-full mb-1">
                 <p className="text-sm font-bold text-gray-900">
-                  {t("reviewCard.rateTitle")}
+                  {t('reviewCard.rateTitle')}
                 </p>
                 <Button
                   variant="ghost"
@@ -164,7 +168,7 @@ export const ReviewCard = ({
                   onClick={onCancel}
                   disabled={isSubmitting}
                 >
-                  {t("reviewCard.cancelBtn")}
+                  {t('reviewCard.cancelBtn')}
                 </Button>
               </div>
 
@@ -172,61 +176,61 @@ export const ReviewCard = ({
                 {/* Fail */}
                 <RateButton
                   score={0}
-                  label={t("reviewCard.rateFail")}
+                  label={t('reviewCard.rateFail')}
                   colorClass="bg-rose-50 text-rose-600 border-rose-100 hover:bg-rose-500 hover:text-white hover:shadow-lg hover:shadow-rose-200"
                   onClick={() => onRate(0)}
                   disabled={isSubmitting}
-                  title={t("reviewCard.titleFail")}
+                  title={t('reviewCard.titleFail')}
                 />
 
                 {/* Hard */}
                 <RateButton
                   score={1}
-                  label={t("reviewCard.rateHard")}
+                  label={t('reviewCard.rateHard')}
                   colorClass="bg-orange-50 text-orange-600 border-orange-100 hover:bg-orange-500 hover:text-white hover:shadow-lg hover:shadow-orange-200"
                   onClick={() => onRate(1)}
                   disabled={isSubmitting}
-                  title={t("reviewCard.titleHard")}
+                  title={t('reviewCard.titleHard')}
                 />
 
                 {/* Medium */}
                 <RateButton
                   score={2}
-                  label={t("reviewCard.rateMedium")}
+                  label={t('reviewCard.rateMedium')}
                   colorClass="bg-amber-50 text-amber-600 border-amber-100 hover:bg-amber-500 hover:text-white hover:shadow-lg hover:shadow-amber-200"
                   onClick={() => onRate(2)}
                   disabled={isSubmitting}
-                  title={t("reviewCard.titleMedium")}
+                  title={t('reviewCard.titleMedium')}
                 />
 
                 {/* Good */}
                 <RateButton
                   score={3}
-                  label={t("reviewCard.rateGood")}
+                  label={t('reviewCard.rateGood')}
                   colorClass="bg-yellow-50 text-yellow-600 border-yellow-100 hover:bg-yellow-500 hover:text-white hover:shadow-lg hover:shadow-yellow-200"
                   onClick={() => onRate(3)}
                   disabled={isSubmitting}
-                  title={t("reviewCard.titleGood")}
+                  title={t('reviewCard.titleGood')}
                 />
 
                 {/* Great */}
                 <RateButton
                   score={4}
-                  label={t("reviewCard.rateGreat")}
+                  label={t('reviewCard.rateGreat')}
                   colorClass="bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-500 hover:text-white hover:shadow-lg hover:shadow-blue-200"
                   onClick={() => onRate(4)}
                   disabled={isSubmitting}
-                  title={t("reviewCard.titleGreat")}
+                  title={t('reviewCard.titleGreat')}
                 />
 
                 {/* Easy */}
                 <RateButton
                   score={5}
-                  label={t("reviewCard.rateEasy")}
+                  label={t('reviewCard.rateEasy')}
                   colorClass="bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-500 hover:text-white hover:shadow-lg hover:shadow-emerald-200"
                   onClick={() => onRate(5)}
                   disabled={isSubmitting}
-                  title={t("reviewCard.titleEasy")}
+                  title={t('reviewCard.titleEasy')}
                 />
               </div>
             </div>

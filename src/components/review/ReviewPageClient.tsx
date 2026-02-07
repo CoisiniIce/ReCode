@@ -1,17 +1,19 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { submitReviewAction } from "@/actions/review";
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { submitReviewAction } from '@/actions/review';
 
-import { toast } from "sonner";
+import { toast } from 'sonner';
 
-import { ReviewTask, ReviewClientProps } from "@/types/review";
-import { containerVariants } from "@/animations/reviewAnimations";
+import { QuestionRowData } from '@/types';
+import { ReviewTask, ReviewClientProps } from '@/types/review';
+import { containerVariants } from '@/animations/reviewAnimations';
 
-import { ReviewHeader } from "./ReviewHeader";
-import { ReviewEmptyState } from "./ReviewEmptyState";
-import { ReviewCard } from "./ReviewCard";
+import { ReviewHeader } from './ReviewHeader';
+import { ReviewEmptyState } from './ReviewEmptyState';
+import { ReviewCard } from './ReviewCard';
+import { QuestionPreviewModal } from '@/components/questions/QuestionPreviewModal';
 
 export default function ReviewPageClient({
   initialReviews,
@@ -19,6 +21,35 @@ export default function ReviewPageClient({
   const [reviews, setReviews] = useState<ReviewTask[]>(initialReviews);
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Preview State
+  const [previewData, setPreviewData] = useState<QuestionRowData | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  // Transform ReviewTask to QuestionRowData
+  const handlePreview = (task: ReviewTask) => {
+    // QuestionRowData temporary object
+    const mappedData: QuestionRowData = {
+      id: task.id,
+      status: 'Review',
+      masteryLevel: task.masteryLevel,
+      notes: task.notes || null,
+      updatedAt: new Date(),
+      problem: {
+        // this id is not used
+        id: '0',
+        pid: task.questionId,
+        title: task.title,
+        difficulty: task.difficulty,
+        tags: task.tags || '',
+        url: task.url || '',
+      },
+      submissions: task.submissions || [],
+    };
+
+    setPreviewData(mappedData);
+    setIsPreviewOpen(true);
+  };
 
   // rate
   const handleRate = async (taskId: string, score: number) => {
@@ -36,15 +67,15 @@ export default function ReviewPageClient({
         const days = result.interval;
         const msg =
           days! >= 365
-            ? "🎉 Graduated! See you in a year!"
+            ? '🎉 Graduated! See you in a year!'
             : `Reviewed! Next session in ${days} days.`;
         toast.success(msg);
       } else {
         throw new Error(result.error);
       }
     } catch (error) {
-      console.error("Review failed:", error);
-      toast.error("Failed. Please try again.");
+      console.error('Review failed:', error);
+      toast.error('Failed. Please try again.');
       // Failure rollback
       if (taskToRate) {
         setReviews((prev) => [taskToRate, ...prev]);
@@ -60,11 +91,11 @@ export default function ReviewPageClient({
         className="absolute inset-0 pointer-events-none opacity-[0.7]"
         style={{
           backgroundImage: `radial-gradient(#cbd5e1 1px, transparent 1px)`,
-          backgroundSize: "24px 24px",
+          backgroundSize: '24px 24px',
         }}
       />
 
-      <div className="relative z-10 max-w-5xl mx-auto space-y-12 pb-24 p-6 md:p-12">
+      <div className="relative z-10 max-w-6xl mx-auto space-y-8 md:space-y-12 pb-24 p-4 md:p-8 lg:p-10">
         {/* Header */}
         <ReviewHeader reviews={reviews} />
 
@@ -88,6 +119,7 @@ export default function ReviewPageClient({
                   onActivate={() => setActiveTaskId(task.id)}
                   onCancel={() => setActiveTaskId(null)}
                   onRate={(score) => handleRate(task.id, score)}
+                  onPreview={() => handlePreview(task)}
                 />
               ))}
             </motion.div>
@@ -97,6 +129,15 @@ export default function ReviewPageClient({
           )}
         </AnimatePresence>
       </div>
+
+      {/* modal */}
+      {previewData && (
+        <QuestionPreviewModal
+          isOpen={isPreviewOpen}
+          onOpenChange={setIsPreviewOpen}
+          data={previewData}
+        />
+      )}
     </div>
   );
 }

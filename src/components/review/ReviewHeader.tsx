@@ -46,7 +46,7 @@ export const ReviewHeader = ({ reviews }: ReviewHeaderProps) => {
   },[reviews]);
 
   return (
-    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
       <div className="space-y-4">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight flex items-center gap-4">
           <div className="p-3 bg-orange-50 text-[#ffa116] rounded-2xl shadow-sm border border-orange-100/50">
